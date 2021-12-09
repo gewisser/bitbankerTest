@@ -1,151 +1,54 @@
-<template>
-  <v-container>
-    <v-row class="text-center">
-      <v-col cols="12">
-        <v-img
-          :src="require('../assets/logo.svg')"
-          class="my-3"
-          contain
-          height="200"
-        />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
-        </h1>
-
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ next.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
-      </v-col>
-
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+<template lang="pug">
+  v-dialog(v-model="showDialog", persistent, max-width="780", content-class="custom-dialog", overlay-color="transparent")
+    v-icon.close-icon(@click="showDialog = false")
+      | $close
+    v-tabs-custom.pb-10(v-model="tabPage")
+      v-tab-custom(v-for="tab in tabPages", :key="tab") {{ tab }}
+    component(:is="tabPages[tabPage]")
 </template>
 
+<style lang="scss">
+  .v-dialog.custom-dialog {
+    background: var(--v-white-base);
+    padding: 10px 30px 71px 30px;
+    box-shadow: unset;
+    position: relative;
+    
+    .close-icon {
+      position: absolute;
+      width: auto;
+      z-index: 1;
+      right: 29px;
+      top: 28px;
+      cursor: pointer;
+    }
+  
+    .col-dialog {
+      max-width: 380px;
+      width: 100%;
+    }
+  }
+</style>
+
 <script>
+  import VTabCustom from '@/components/vTabCustom'
+  import VTabsCustom from '@/components/vTabsCustom'
+  
   export default {
     name: 'HelloWorld',
-
-    data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
-    }),
+    components: {
+      VTabsCustom,
+      VTabCustom,
+      Deposit: () =>  import("@/components/tabs/deposit"),
+      Withdraw: () =>  import("@/components/tabs/withdraw"),
+      Rebalance: () =>  import("@/components/tabs/rebalance"),
+    },
+    data(){
+      return {
+        showDialog: true,
+        tabPage: 0,
+        tabPages: ["Deposit", "Withdraw", "Rebalance"]
+      }
+    }
   }
 </script>
